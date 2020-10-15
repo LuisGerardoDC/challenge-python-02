@@ -1,12 +1,35 @@
 # Resolve the problem!!
 import string
+import random
+from random import sample
 
 SYMBOLS = list('!"#$%&\'()*+,-./:;?@[]^_`{|}~')
+CAP_LETTERS = [chr(val) for val in range(65,91)]
+LOW_LETTERS = [chr(val) for val in range(97,123)]
+DIGITS = list('123456789')
+results =[]
 
+def char_sample(list_items,size):
+    selected_chars = sample(list_items,size)
+    return selected_chars
 
 def generate_password():
-    # Start coding here
+    chars=[
+        SYMBOLS,
+        CAP_LETTERS,
+        LOW_LETTERS,
+        DIGITS
+    ]
+    password_size = random.randint(8,16)
+    chars_len = len(chars)
+    chunk_size = int(password_size / chars_len)
+    password =[]
 
+    for i in range(chars_len):
+        password.extend(char_sample(chars[i],chunk_size))
+
+    random.shuffle(password)
+    return ''.join(password)
 
 def validate(password):
 
@@ -43,11 +66,25 @@ def validate(password):
 
 def run():
     password = generate_password()
-    if validate(password):
-        print('Secure Password')
-    else:
-        print('Insecure Password')
+    validity = validate(password)
+    results.append(validity)
+
+    #if validate(password):
+        #print('Secure Password')
+   # else:
+        #print('Insecure Password')
 
 
 if __name__ == '__main__':
-    run()
+    _test_size= 10000
+    for i in range(_test_size):
+        run()
+    count_secure = 0
+    count_insecure = 0
+    for result in results:
+        if(result):
+            count_secure += 1
+        else:
+            count_insecure += 1
+
+    print(f'test size:\t{_test_size}\nSecure passwords:\t{count_secure}\nInsecure passwords:\t{count_insecure}')
